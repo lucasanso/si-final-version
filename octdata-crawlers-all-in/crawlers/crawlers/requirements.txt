@@ -1,0 +1,8 @@
+pyaml
+scrapy==2.11.1
+scrapy_playwright
+sshtunnel
+paramiko==3.0
+unidecode
+pytz
+pymongo

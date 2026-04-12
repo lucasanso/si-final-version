@@ -1,0 +1,6 @@
+paramiko==3.0
+sshtunnel
+pandas
+pymongo
+pyaml
+odfpy
