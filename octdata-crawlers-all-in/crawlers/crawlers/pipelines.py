@@ -6,8 +6,6 @@ from .items import CrawlerItem
 from datetime import datetime
 from .keywords import KEYWORDS
 import scrapy
-from confluent_kafka import Producer
-import json
 
 try:
     with open('config.yaml', 'r') as configs_file:
@@ -24,11 +22,6 @@ class CrawlersPipeline:
     Classe responsável pelas conexões SSH e cliente do MongoDB para realizar inserção de notícias, envio de email e logs automatizados.
     """
     def __init__(self) -> None:
-        self.kafka_producer_config = {
-            'bootstrap.servers' : 'localhost:9092',
-            'client.id' : 'scrapy'
-        }
-
         self.accepted = 0
         self.unaccepted = 0
         self.mongodb_uri = configs['mongodb_lamcad']['uri']
@@ -36,7 +29,6 @@ class CrawlersPipeline:
         self.mongodb_accepted_news_collection = configs['mongodb_lamcad']['accepted_news_collection']
         self.mongodb_unaccepted_news_collection = configs['mongodb_lamcad']['unaccepted_news_collection']
         self.newsLogs = configs['mongodb_lamcad']['logs_collection']
-        self.mail_config = configs['smtp_email']
         self.all = [""]
 
         self.server = None
@@ -50,28 +42,27 @@ class CrawlersPipeline:
             spider(scrapy.Spider): Bot em execução.
         """
         print(f'[PROCESSO] Iniciando bot de extração: {spider.name}')
-        self.producer = Producer(**self.kafka_producer_config)
         lamcad_configs = configs['lamcad']
         try:
-            # self.server = open_tunnel(
-            #     (lamcad_configs['server_ip'], lamcad_configs['server_port']),
-            #     ssh_username=lamcad_configs['ssh_username'],
-            #     ssh_password=lamcad_configs['ssh_password'],
-            #     local_bind_address=(lamcad_configs['local_bind_ip'], lamcad_configs['local_bind_port']),
-            #     remote_bind_address=(lamcad_configs['remote_bind_ip'], lamcad_configs['remote_bind_port'])
-            # )
-            # self.server.start()
-            # spider.logger.info(
-            #     f"[SUCESSO] Conexão com o LamCAD criada com o seguinte IP e porta: {self.server.local_bind_address}")
+            self.server = open_tunnel(
+                (lamcad_configs['server_ip'], lamcad_configs['server_port']),
+                ssh_username=lamcad_configs['ssh_username'],
+                ssh_password=lamcad_configs['ssh_password'],
+                local_bind_address=(lamcad_configs['local_bind_ip'], lamcad_configs['local_bind_port']),
+                remote_bind_address=(lamcad_configs['remote_bind_ip'], lamcad_configs['remote_bind_port'])
+            )
+            self.server.start()
+            spider.logger.info(
+                f"[SUCESSO] Conexão com o LamCAD criada com o seguinte IP e porta: {self.server.local_bind_address}")
 
-            # self.client = pymongo.MongoClient(self.mongodb_uri)
-            # database = self.client[self.mongodb_database]
-            # self.accepted_news_collection = database[self.mongodb_accepted_news_collection]
-            # self.unaccepted_news_collection = database[self.mongodb_unaccepted_news_collection]
-            # self.newsLogs_collection = database[self.newsLogs]
+            self.client = pymongo.MongoClient(self.mongodb_uri)
+            database = self.client[self.mongodb_database]
+            self.accepted_news_collection = database[self.mongodb_accepted_news_collection]
+            self.unaccepted_news_collection = database[self.mongodb_unaccepted_news_collection]
+            self.newsLogs_collection = database[self.newsLogs]
 
-            # self.all = self.get_all_urls()
-            pass
+            self.all = self.get_all_urls()
+
         except Exception as e:
             spider.logger.error(f"[ERRO] Erro crítico ao conectar no banco ou SSH: {e}")
             
@@ -98,7 +89,7 @@ class CrawlersPipeline:
         if self.server:
             self.server.stop()
 
-    def process_item(self, item: CrawlerItem, spider: scrapy.Spider, test_output: bool = False) -> None:
+    def process_item(self, item: CrawlerItem, spider: scrapy.Spider) -> None:
         """
         Orquestra o fluxo de persistência de um item extraído.
 
@@ -108,47 +99,29 @@ class CrawlersPipeline:
         Args:
             item (CrawlerItem): Objeto contendo os dados estruturados da notícia.
             spider (scrapy.Spider): Bot em execução.
-            test_output (bool): Se True, ativa logs extras ou exportação local (Default: False).
 
         Note:
             A deduplicação é feita consultando o conjunto 'self.all' carregado no início da execução.
         """
         self.data = dict(CrawlerItem(item))
         
-        if test_output:
-            pass
         if self.data.get("url") not in self.all:
             if self.data.get("accepted_by"):
                 spider.logger.info(f"[SUCESSO] Inserindo URL {self.data.get('url')} aceita")
                 
-                # self.data['id_event'] = self.get_next_id_event()
-                # self.accepted_news_collection.insert_one(self.data)
-                # self.accepted += 1
+                self.data['id_event'] = self.get_next_id_event()
+                self.accepted_news_collection.insert_one(self.data)
+                self.accepted += 1
 
-                self.producer.produce(
-                    topic="raw_news",
-                    key=str(self.data.get("id_event")),
-                    value=json.dumps(self.data, ensure_ascii=False, default=str).encode('utf-8'),
-                    callback=self.sent_product
-                )
-
-                self.producer.flush()
             else:
                 url = {'url' : self.data.get('url')}
                 spider.logger.info(f"[AVISO] URL {self.data.get('url')} não aceita sendo inserida")
-                self.producer.produce(
-                    topic="raw_news",
-                    key=str(self.data.get("id_event")),
-                    value=json.dumps(self.data, ensure_ascii=False, default=str).encode('utf-8'),
-                    callback=self.sent_product
-                )
 
-                self.producer.flush()
+                self.unaccepted_news_collection.insert_one(url)
+                self.unaccepted += 1
 
-                # self.unaccepted_news_collection.insert_one(url)
-                # self.unaccepted += 1
+            self.all.add(self.data.get("url"))
 
-            # self.all.add(self.data.get("url"))
         elif self.data.get('url') is None:
             print(f"[AVISO] A notícia possui formatação totalmente diferente.")
         
@@ -233,52 +206,3 @@ class CrawlersPipeline:
             return last_record['id_event'] + 1
             
         return 1 
-    
-    def send_mail(self, spider: scrapy.Spider, email_from: str, email_to: str, mail_on: bool = False) -> None:
-        """
-        Envia email com o resultado da última extração de notícias para um email de destino determinado.
-
-        Args:
-            spider(scrapy.Spider): Bot em execução.
-            email_from(str): Email remetente.
-            email_to(str): Email que receberá as informações da extração.
-            mail_on(bool): Se True, o envio de email será ativado.
-
-        Note:
-            É settado como False por padrão.
-            Para configurar email e senha de app do protocolo SMTP, visite o módulo settings.py contido neste projeto.
-
-        """
-        import smtplib
-        from email.message import EmailMessage
-
-        if mail_on:
-            try:
-                config = { 
-                    'EMAIL_USER' : self.mail_config['email_from'],
-                    'EMAIL_PASS' : self.mail_config['app_passw']
-                }
-
-                msg = EmailMessage ()
-                msg['From'] = config['EMAIL_USER']
-                msg['To'] = self.mail_config['email_to']
-                msg['Subject'] = f'Extração de notícias do bot: {spider.name}'
-                msg.set_content(
-                    f'Segue abaixo o resultado da última extração de notícias.\n{self.generate_log()}'
-                )
-
-                server = smtplib.SMTP('smtp.gmail.com', 587)
-                server.starttls()
-                server.ehlo()
-                server.login(config['EMAIL_USER'], config['EMAIL_PASS'])
-                server.send_message(msg)
-                server.quit()
-            except Exception as e:
-                print(f'[ERRO] Erro ao enviar email: {e}')
-    
-    def sent_product(self, err, msg):
-        if err is not None:
-            print("[ERRO] Não foi possível enviar a mensagem.")
-
-        else:
-            print(f"[SUCESSO] Conteúdo [{msg.topic()}] enviado para fila na partição [{msg.partition()}]")
