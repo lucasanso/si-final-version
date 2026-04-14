@@ -12,10 +12,15 @@ import yaml
 
 BUILD_SEARCH_PAGE = "https://www.dm.com.br/page/{}/?s={}"
 PAGES = [p for p in range (1, 150)]
-# É um portal que toda a implementação é linear a condição de parada pode ser determinada por um while...
+
 class SpiderDiario:
     """
-    Classe que contém a lógica principal do crawler.
+    Módulo de Coleta de Dados - Portal Diário da Manhã (DM)
+
+    Este módulo contém a implementação do SpiderDiario, um crawler especializado 
+    em extrair notícias de forma cronológica e categorizada através do motor de 
+    busca do portal DM, utilizando persistência em MongoDB e túnel SSH para 
+    comunicação segura com servidores remotos.
     """
     def __init__(self) -> None:
         """
@@ -350,8 +355,16 @@ class SpiderDiario:
                 file.write(f"\n{keyword}")
         except FileNotFoundError as e:
             print(f"[ERRO] {e}")
+    
+    def get_next_id_event(self):
+        """
+        Retorna o id_event da última notícia da coleção de notícias aceitas do banco.
 
-    def get_next_id_event(self): 
+        Caso a coleção esteja vazia, retorna 1.
+
+        Returns:
+            int: id_event da última notícia da coleção newsData 
+        """
         last_record = self.client.get_database('couser').get_collection('newsData').find_one(sort=[('id_event', -1)])
         
         if last_record and 'id_event' in last_record:
@@ -359,5 +372,3 @@ class SpiderDiario:
             
         # é como se tivesse um else aqui, para caso o banco esteja vazio, daí retorna 1.
         return 1 
-if __name__ == "__main__":
-    executa = SpiderDiario()
