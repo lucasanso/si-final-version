@@ -2123,3 +2123,227 @@
 2026-03-15 19:09:01,467 - INFO - Authentication (password) successful!
 2026-03-15 19:10:20,309 - INFO - Todas as notícias/ano foram obtidas
 2026-03-15 19:10:24,173 - INFO - Arquivo relatorio foi salvo
+2026-04-14 18:06:57,308 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:06:57,590 - INFO - Authentication (publickey) failed.
+2026-04-14 18:06:57,719 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:06:58,111 - INFO - Authentication (publickey) failed.
+2026-04-14 18:06:58,189 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:06:58,539 - INFO - Authentication (password) successful!
+2026-04-14 18:09:17,710 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:09:18,001 - INFO - Authentication (publickey) failed.
+2026-04-14 18:09:18,132 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:09:18,587 - INFO - Authentication (publickey) failed.
+2026-04-14 18:09:18,669 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:09:18,982 - INFO - Authentication (password) successful!
+2026-04-14 18:09:36,554 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:09:36,829 - INFO - Authentication (publickey) failed.
+2026-04-14 18:09:36,911 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:09:37,203 - INFO - Authentication (publickey) failed.
+2026-04-14 18:09:37,236 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:09:37,420 - INFO - Authentication (password) successful!
+2026-04-14 18:11:04,757 - INFO - Todas as notícias/ano foram obtidas
+2026-04-14 18:11:08,528 - INFO - Arquivo relatorio foi salvo com sucesso em data/relatorios/relatorio-2026-04-14.csv
+2026-04-14 18:11:27,426 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:11:27,704 - INFO - Authentication (publickey) failed.
+2026-04-14 18:11:27,734 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:11:27,884 - INFO - Authentication (publickey) failed.
+2026-04-14 18:11:27,913 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:11:28,103 - INFO - Authentication (password) successful!
+2026-04-14 18:13:57,792 - INFO - Todas as notícias/ano foram obtidas
+2026-04-14 18:14:16,159 - INFO - Arquivo relatorio foi salvo com sucesso em data/relatorios/relatorio-2026-04-14.csv
+2026-04-14 18:20:05,817 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:20:05,970 - INFO - Authentication (publickey) failed.
+2026-04-14 18:20:06,097 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:20:06,572 - INFO - Authentication (publickey) failed.
+2026-04-14 18:20:06,650 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:20:06,957 - INFO - Authentication (password) successful!
+2026-04-14 18:20:38,055 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:20:38,457 - INFO - Authentication (publickey) failed.
+2026-04-14 18:20:38,536 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:20:38,807 - INFO - Authentication (publickey) failed.
+2026-04-14 18:20:38,884 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:20:39,190 - INFO - Authentication (password) successful!
+2026-04-14 18:20:46,788 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:20:47,059 - INFO - Authentication (publickey) failed.
+2026-04-14 18:20:47,140 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:20:47,415 - INFO - Authentication (publickey) failed.
+2026-04-14 18:20:47,492 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:20:47,802 - INFO - Authentication (password) successful!
+2026-04-14 18:50:24,651 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:50:24,925 - INFO - Authentication (publickey) failed.
+2026-04-14 18:50:25,053 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:50:25,451 - INFO - Authentication (publickey) failed.
+2026-04-14 18:50:25,531 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:50:25,844 - INFO - Authentication (password) successful!
+2026-04-14 18:50:25,849 - ERROR - Problem setting SSH Forwarder up: Couldn't open tunnel localhost:27018 <> 127.0.0.1:27017 might be in use or destination not reachable
+2026-04-14 18:50:25,850 - ERROR - SSH Tunnel Error: An error occurred while opening tunnels.
+2026-04-14 18:52:04,915 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:52:05,431 - INFO - Authentication (publickey) failed.
+2026-04-14 18:52:05,510 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:52:05,793 - INFO - Authentication (publickey) failed.
+2026-04-14 18:52:05,924 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:52:06,362 - INFO - Authentication (password) successful!
+2026-04-14 18:52:10,598 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:52:10,869 - INFO - Authentication (publickey) failed.
+2026-04-14 18:52:10,995 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:52:11,386 - INFO - Authentication (publickey) failed.
+2026-04-14 18:52:11,515 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:52:11,943 - INFO - Authentication (password) successful!
+2026-04-14 18:52:30,763 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:52:31,037 - INFO - Authentication (publickey) failed.
+2026-04-14 18:52:31,165 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:52:31,643 - INFO - Authentication (publickey) failed.
+2026-04-14 18:52:31,772 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:52:32,207 - INFO - Authentication (password) successful!
+2026-04-14 18:53:14,879 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:53:15,158 - INFO - Authentication (publickey) failed.
+2026-04-14 18:53:15,289 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:53:15,692 - INFO - Authentication (publickey) failed.
+2026-04-14 18:53:15,770 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:53:16,077 - INFO - Authentication (password) successful!
+2026-04-14 18:53:33,409 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:53:33,682 - INFO - Authentication (publickey) failed.
+2026-04-14 18:53:33,809 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:53:34,213 - INFO - Authentication (publickey) failed.
+2026-04-14 18:53:34,291 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:53:34,598 - INFO - Authentication (password) successful!
+2026-04-14 18:54:09,045 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:54:09,544 - INFO - Authentication (publickey) failed.
+2026-04-14 18:54:09,672 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:54:10,069 - INFO - Authentication (publickey) failed.
+2026-04-14 18:54:10,146 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:54:10,457 - INFO - Authentication (password) successful!
+2026-04-14 18:54:18,061 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:54:18,466 - INFO - Authentication (publickey) failed.
+2026-04-14 18:54:18,546 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:54:18,824 - INFO - Authentication (publickey) failed.
+2026-04-14 18:54:18,952 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:54:19,406 - INFO - Authentication (password) successful!
+2026-04-14 18:56:42,862 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:56:43,267 - INFO - Authentication (publickey) failed.
+2026-04-14 18:56:43,397 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:56:43,864 - INFO - Authentication (publickey) failed.
+2026-04-14 18:56:43,942 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 18:56:44,253 - INFO - Authentication (password) successful!
+2026-04-14 19:01:53,220 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:01:53,511 - INFO - Authentication (publickey) failed.
+2026-04-14 19:01:53,593 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:01:53,872 - INFO - Authentication (publickey) failed.
+2026-04-14 19:01:53,902 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:01:54,092 - INFO - Authentication (password) successful!
+2026-04-14 19:03:00,179 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:03:00,343 - INFO - Authentication (publickey) failed.
+2026-04-14 19:03:00,424 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:03:00,695 - INFO - Authentication (publickey) failed.
+2026-04-14 19:03:00,830 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:03:01,294 - INFO - Authentication (password) successful!
+2026-04-14 19:03:19,519 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:03:19,678 - INFO - Authentication (publickey) failed.
+2026-04-14 19:03:19,764 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:03:20,048 - INFO - Authentication (publickey) failed.
+2026-04-14 19:03:20,177 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:03:20,718 - INFO - Authentication (password) successful!
+2026-04-14 19:03:41,714 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:03:41,865 - INFO - Authentication (publickey) failed.
+2026-04-14 19:03:41,945 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:03:42,227 - INFO - Authentication (publickey) failed.
+2026-04-14 19:03:42,306 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:03:42,612 - INFO - Authentication (password) successful!
+2026-04-14 19:03:51,807 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:03:52,289 - INFO - Authentication (publickey) failed.
+2026-04-14 19:03:52,421 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:03:52,899 - INFO - Authentication (publickey) failed.
+2026-04-14 19:03:53,038 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:03:53,484 - INFO - Authentication (password) successful!
+2026-04-14 19:06:20,236 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:06:20,519 - INFO - Authentication (publickey) failed.
+2026-04-14 19:06:20,551 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:06:20,714 - INFO - Authentication (publickey) failed.
+2026-04-14 19:06:20,840 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:06:21,302 - INFO - Authentication (password) successful!
+2026-04-14 19:08:40,774 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:08:41,055 - INFO - Authentication (publickey) failed.
+2026-04-14 19:08:41,136 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:08:41,415 - INFO - Authentication (publickey) failed.
+2026-04-14 19:08:41,496 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:08:41,805 - INFO - Authentication (password) successful!
+2026-04-14 19:10:49,337 - INFO - Todas as notícias/ano foram obtidas
+2026-04-14 19:10:52,942 - INFO - Arquivo relatorio foi salvo com sucesso em data/relatorios/relatorio-2026-04-14.csv
+2026-04-14 19:34:31,808 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:34:31,966 - INFO - Authentication (publickey) failed.
+2026-04-14 19:34:31,996 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:34:32,150 - INFO - Authentication (publickey) failed.
+2026-04-14 19:34:32,224 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:34:32,525 - INFO - Authentication (password) successful!
+2026-04-14 19:35:16,758 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:35:17,149 - INFO - Authentication (publickey) failed.
+2026-04-14 19:35:17,227 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:35:17,497 - INFO - Authentication (publickey) failed.
+2026-04-14 19:35:17,573 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 19:35:17,880 - INFO - Authentication (password) successful!
+2026-04-14 20:28:02,986 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:28:03,260 - INFO - Authentication (publickey) failed.
+2026-04-14 20:28:03,338 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:28:03,609 - INFO - Authentication (publickey) failed.
+2026-04-14 20:28:03,689 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:28:03,996 - INFO - Authentication (password) successful!
+2026-04-14 20:28:12,917 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:28:13,334 - INFO - Authentication (publickey) failed.
+2026-04-14 20:28:13,464 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:28:13,963 - INFO - Authentication (publickey) failed.
+2026-04-14 20:28:14,094 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:28:14,521 - INFO - Authentication (password) successful!
+2026-04-14 20:28:20,303 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:28:20,657 - INFO - Authentication (publickey) failed.
+2026-04-14 20:28:20,819 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:28:21,300 - INFO - Authentication (publickey) failed.
+2026-04-14 20:28:21,451 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:28:21,975 - INFO - Authentication (password) successful!
+2026-04-14 20:28:42,343 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:28:42,617 - INFO - Authentication (publickey) failed.
+2026-04-14 20:28:42,749 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:28:43,137 - INFO - Authentication (publickey) failed.
+2026-04-14 20:28:43,262 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:28:43,693 - INFO - Authentication (password) successful!
+2026-04-14 20:28:46,606 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:28:47,001 - INFO - Authentication (publickey) failed.
+2026-04-14 20:28:47,126 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:28:47,521 - INFO - Authentication (publickey) failed.
+2026-04-14 20:28:47,646 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:28:48,081 - INFO - Authentication (password) successful!
+2026-04-14 20:29:51,536 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:29:51,814 - INFO - Authentication (publickey) failed.
+2026-04-14 20:29:51,943 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:29:52,346 - INFO - Authentication (publickey) failed.
+2026-04-14 20:29:52,428 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:29:52,737 - INFO - Authentication (password) successful!
+2026-04-14 20:31:01,412 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:31:01,683 - INFO - Authentication (publickey) failed.
+2026-04-14 20:31:01,810 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:31:02,200 - INFO - Authentication (publickey) failed.
+2026-04-14 20:31:02,281 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:31:02,591 - INFO - Authentication (password) successful!
+2026-04-14 20:31:46,597 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:31:47,048 - INFO - Authentication (publickey) failed.
+2026-04-14 20:31:47,177 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:31:47,655 - INFO - Authentication (publickey) failed.
+2026-04-14 20:31:47,732 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:31:48,034 - INFO - Authentication (password) successful!
+2026-04-14 20:32:13,148 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:32:13,686 - INFO - Authentication (publickey) failed.
+2026-04-14 20:32:13,811 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:32:14,222 - INFO - Authentication (publickey) failed.
+2026-04-14 20:32:14,355 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:32:14,805 - INFO - Authentication (password) successful!
+2026-04-14 20:32:17,770 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:32:18,046 - INFO - Authentication (publickey) failed.
+2026-04-14 20:32:18,126 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:32:18,401 - INFO - Authentication (publickey) failed.
+2026-04-14 20:32:18,478 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:32:18,784 - INFO - Authentication (password) successful!
+2026-04-14 20:32:25,003 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:32:25,398 - INFO - Authentication (publickey) failed.
+2026-04-14 20:32:25,524 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:32:25,914 - INFO - Authentication (publickey) failed.
+2026-04-14 20:32:26,039 - INFO - Connected (version 2.0, client OpenSSH_8.9p1)
+2026-04-14 20:32:26,465 - INFO - Authentication (password) successful!

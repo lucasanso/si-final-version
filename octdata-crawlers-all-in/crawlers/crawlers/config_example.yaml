@@ -1,0 +1,16 @@
+ssh_configs:
+  server_ip: "<ip>"
+  server_port: 22
+  ssh_username: "<username>"
+  ssh_password: "<password>"
+  local_bind_ip: "<local_host>"
+  local_bind_port: 27018
+  remote_bind_ip: "<ip>"
+  remote_bind_port: 27017
+
+mongodb_configs:
+  uri: "mongodb://<name>:<password>@lh:rh/couser?directConnection=true&serverSelectionTimeoutMS=2000"
+  database: "<database_name>"
+  accepted_news_collection: "<name_collection>"
+  unaccepted_news_collection: "<name_collection>"
+  logs_collection: "<name_collection>"

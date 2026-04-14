@@ -19,7 +19,12 @@ except FileNotFoundError as e:
 
 class CrawlersPipeline:
     """
-    Classe responsável pelas conexões SSH e cliente do MongoDB para realizar inserção de notícias, envio de email e logs automatizados.
+    Responsável pelas conexões SSH e persistência no MongoDB.
+
+    Attributes:
+        accepted (int): Contador de notícias que passaram no filtro.
+        unaccepted (int): Contador de notícias descartadas/repetidas.
+        all (set): Conjunto de URLs já existentes para deduplicação em memória.
     """
     def __init__(self) -> None:
         self.accepted = 0
@@ -126,14 +131,14 @@ class CrawlersPipeline:
             print(f"[AVISO] A notícia possui formatação totalmente diferente.")
         
         else:
-            print(f'[AVISO] {self.data['url']} já está no banco. Pulando...')
+            print(f"[AVISO] {self.data['url']} já está no banco. Pulando...")
 
     def get_all_urls(self) -> set:
         """
-        Obtém todas as notícias percorridas do banco para lógica de deduplicação.
+        Obtém todas as URLs do banco para garantir unicidade.
 
         Returns:
-            set: Retorna um conjunto (set) contendo todas as URLs. (Comparação O(1))
+            set: Conjunto de URLs para busca em tempo constante O(1).
         """
         all_seen_urls = []
 
@@ -153,6 +158,7 @@ class CrawlersPipeline:
             return set(all_seen_urls)
         except Exception as e:
             print(f'[ERRO] Erro ao obter as notícias do banco {e}')
+            return set()
     
     def generate_log(self, spider: scrapy.Spider, log_on: bool = False) -> dict:
         """
@@ -160,7 +166,7 @@ class CrawlersPipeline:
 
         Args:
             spider(scrapy.Spider): Bot que está executando uma extração de notícias.
-            save(bool): Se True, será habilitado o salvamento do log da extração na coleção newsLogs.
+            log_on(bool): Se True, será habilitado o salvamento do log da extração na coleção newsLogs.
         Returns:
             dict: Retorna o log formatado em dicionário.
         Note:

@@ -1,20 +1,42 @@
 import scrapy
-from ..keywords import KEYWORDS
-from ..utils import get_processed_kwords, validate_article, search_gangs, search_tags, save_processed_kword
-from ..items import CrawlerItem
-from datetime import datetime
 import pytz
 import re
+from datetime import datetime
+from ..keywords import KEYWORDS
+from ..items import CrawlerItem
+from ..utils import (
+    search_gangs, 
+    search_tags, 
+    validate_article, 
+    get_processed_kwords, 
+    save_processed_kword
+)
 from .base_spider import BaseSpider
 
+# Configurações de URL
 INIT_URL = 'https://www.brasildefato.com.br/?s={}' 
 SEARCH_PAGE_URL = 'https://www.brasildefato.com.br/page/{}/?s={}'
 
 class BdfSpider(BaseSpider):
+    """
+    Spider especializado para o portal Brasil de Fato.
+    
+    A extração é baseada em uma lógica de paginação recursiva simples. O spider 
+    percorre os resultados de busca e, enquanto encontrar links de artigos válidos, 
+    incrementa o contador de páginas na URL.
+    """
+
     name = 'bdf'
     allowed_domains = ['www.brasildefato.com.br']
 
     def __init__(self):
+        """
+        Inicializa o spider e recupera o histórico de progresso.
+
+        Notes:
+            Utiliza o utilitário 'get_processed_kwords' para carregar os termos 
+            que já foram finalizados, permitindo a retomada de crawls interrompidos.
+        """
         self.processed_kwords = get_processed_kwords(self.name)
 
     def start_requests(self):
@@ -40,7 +62,7 @@ class BdfSpider(BaseSpider):
         # Seleciona os links dos artigos na página de resultados
         links = response.css('h2 a::attr(href)').getall()
 
-        # VERIFICAÇÃO DE FIM DE RESULTADOS
+        # Verificação de fim de resultados
         # Se não houver links, a palavra-chave terminou ou não tem resultados
         if not links:
             self.logger.info(f'Palavra-chave "{keyword}" totalmente processada na página {current_page}.')
@@ -55,7 +77,7 @@ class BdfSpider(BaseSpider):
                 meta={'keyword': keyword}
             )
 
-        # PAGINAÇÃO RECURSIVA
+        # Paginação recursiva
         # Gera o pedido para a PRÓXIMA página apenas se esta atual teve links
         next_page = current_page + 1
         next_url = SEARCH_PAGE_URL.format(next_page, keyword)

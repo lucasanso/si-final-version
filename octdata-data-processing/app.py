@@ -20,108 +20,56 @@ class App:
         self.convert = ConvertFormat()
         self.the_menu = Menu()
         
+        self.commands = {
+            '1': self.worker.remove_date_blank_space,
+            '2': self.worker.cvt_timestampz_to_date,
+            '3': self.worker.cvt_inverted_date,
+            '4': self.worker.string_date_processing,
+            '5': self.worker.set_documents_id_event,
+            '6': self.worker.update_newspaper_name,
+            '7': self.worker.merge_unaccepted_collections,
+            '8' : self.worker.setAttribute,
+            '9' : True
+        }
+
+        self.readoptions = {
+            '1' : self.read.generate_news_report,
+            '2' : self.convert.cvt_csv_to_ods,
+            '3': True
+        }
         
         print("\n---------- Controle de dados MongoDB -----------")
         
         self.menu()
                     
     def menu(self):
-        valid = True
+        while(True):
+            self.the_menu.menu_processing()
+            option = input()
 
-        while(valid):
-            self.the_menu.msg()
-            variavel = input()
+            if option == "0":
+                print("Encerrando. © Lucas Santos Soares | UFG")
+                break
 
-            match (variavel):
-                case '1':
-                    permission = self.the_menu.care_menu()
-                    if permission:
-                        self.worker.remove_date_blank_space()
-                               
-                case '2':
-                    permission = self.the_menu.care_menu()
-
-                    if permission:
-                        self.worker.cvt_timestampz_to_date()
-
-                case '3':
-                    permission = self.the_menu.care_menu()
-
-                    if permission:
-                        self.worker.cvt_inverted_date()
-
-                case '4':
-                    permission = self.the_menu.care_menu()
-
-                    if permission: 
-                        self.worker.string_date_processing()
-                case '5':
-                    permission = self.the_menu.care_menu()
-
-                    if permission:
-                        self.worker.set_documents_id_event()
-
-                case '6':
-                    permission = self.the_menu.care_menu()
-
-                    if permission:
-                        self.worker.update_newspaper_name()
-
-                case '7':
-                    permission = self.the_menu.care_menu()
-
-                    if permission:
-                        self.worker.merge_unaccepted_collections()
-
-                case '8': 
-                    validR = True
+            elif option in self.commands:
+                if option == "9":
                     self.the_menu.menu_read_only()
+                    opcao = input()
 
-                    while validR:
-                        options = input()
-
-                        match(options):
-                            case '1':
-                                self.read.generate_news_report()
-                                validR = False
-                            case '2':
-                                pass
-                            case '3':
-                                pass
-
-                            case '4':
-                                self.convert.cvt_csv_to_ods(input("[AVISO] Digite o diretório do arquivo .csv que deseja converter para .ods:\n"), input("[AVISO] Digite o nome que deseja salvar o novo arquivo.ods:\n"))
-
-                            case '5':
-                                validR = False
-                                
-                            case '0':
-                                try:
-                                    self.server.close()
-                                    print("[AVISO] Conexão SSH finalizada")
-                                except Exception as e:
-                                    print(f"[ERRO] {e}")
-
-                                print("Finalizando o programa. Obrigado por utilizar! © Lucas Santos Soares")
-                                validR = False
-                                valid = False
-                            case _ :
-                                print("[AVISO] Opção inválida, tente novamente.")
-                case '9':
-                    self.worker.setAttribute()
-                
-                case '0':
-                    try:
-                        self.server.close()
-                        print("[AVISO] Conexão SSH finalizada")
-                    except Exception as e:
-                        print(f"[ERRO] {e}")
-                    
-                    print("Finalizando o programa. Obrigado por utilizar! © Lucas Santos Soares")
-                    valid = False
-
-                case _ :
-                    print("[AVISO] Opção inválida, tente novamente.")
-
+                    if opcao in self.readoptions:
+                        if opcao == "3":
+                            pass
+                        elif opcao == "0":
+                            break
+                        else:
+                            self.readoptions.get(f"{opcao}")()
+                    else:
+                        print("[ERRO] Opção inválida. Retornando...")
+                else:        
+                    self.the_menu.care_menu()
+                    self.commands.get(f"{option}")()
+            else:
+                print("[ERRO] Opção inválida. Tente novamente")
+            
 if __name__ == "__main__":
     execute = App()

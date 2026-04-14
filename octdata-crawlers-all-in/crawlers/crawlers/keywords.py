@@ -1,6 +1,6 @@
 KEYWORDS = {
     'GANGS': [
-        'AÇDMASLADKSKDAS', 'abertos', 'aca', 'accu', 'agc', 'amigos dos amigos', 'amigos para sempre',
+        'abertos', 'aca', 'accu', 'agc', 'amigos dos amigos', 'amigos para sempre',
         'anti-disturbances squadron', 'armed farmers', 'army of national liberation', 'auc',
         'autodefensas gaitanistas de colombia', 'autodefesas unidas da colombia',
         'autodefesas unidas da colombia', 'awa', 'bacrim', 'bala na cara', 'bandas criminales',

@@ -1,1 +1,6 @@
 bs4
+requests
+sshtunnel
+paramiko==3.0
+pymongo
+pyaml

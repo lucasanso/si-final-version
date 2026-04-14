@@ -3,17 +3,39 @@ from ..items import CrawlerItem
 from datetime import datetime, timedelta
 import re
 import pytz
-from ..keywords import KEYWORDS, VALIDATION_KEYWORDS
+from ..keywords import KEYWORDS
 from ..settings import YEARS
-from ..utils import validate_article, search_gangs, search_tags, save_processed_kword, get_processed_kwords
+from ..utils import (
+    search_gangs, 
+    search_tags, 
+    validate_article, 
+    get_processed_kwords, 
+    save_processed_kword
+)
+from base_spider import BaseSpider
 
-class FolhaSpider(scrapy.Spider):
+class FolhaSpider(BaseSpider):
+    """
+    Spider para extração de notícias históricas do jornal Folha de S.Paulo.
+    Utiliza o sistema de busca interna do portal para filtrar por períodos específicos.
+    """
     name = "folha"
     allowed_domains = ["search.folha.uol.com.br", "www1.folha.uol.com.br"] 
     
+    # Template de URL para busca personalizada por data
     SEARCH_PAGE_URL = "https://search.folha.uol.com.br/search?q={}&periodo=personalizado&sd={:02d}%2F{:02d}%2F{}&ed={:02d}%2F{:02d}%2F{}&site=todos"
 
     def __init__(self, **kwargs):
+        """
+        Inicializa o Spider e carrega o estado de progresso das palavras-chave.
+
+        Args:
+            **kwargs: Argumentos arbitrários passados via CLI.
+        
+        Notes:
+            Recupera através da utilidade 'get_processed_kwords' os termos que já 
+            foram finalizados em execuções anteriores para evitar duplicidade.
+        """
         super().__init__(**kwargs)
         self.processed_kwords = get_processed_kwords(self.name)
 
@@ -165,9 +187,24 @@ class FolhaSpider(scrapy.Spider):
         yield item
 
     def variate_publication_date(self, response):
+        """
+        Tenta extrair a data de publicação em diferentes seletores CSS 
+        devido à inconsistência de layouts da Folha.
+
+        Args:
+            response (scrapy.http.Response): A resposta da página da notícia.
+
+        Returns:
+            str | None: O texto da data se encontrado, ou None caso os seletores falhem.
+        
+        Notes:
+            Esta é uma função de fallback para casos onde o seletor principal 
+            do 'parse_item' não captura o metadado de tempo.
+        """
         if response.css('header [datetime*="-"]::text').getall()[1]:
             return response.css('header [datetime*="-"]::text').getall()[1]
         elif response.css('[datetime*="-"]::text').getall()[0]:
             return response.css('[datetime*="-"]::text').getall()[0]
         else:
             print("[AVISO] A data está em formato diferente")
+            return None

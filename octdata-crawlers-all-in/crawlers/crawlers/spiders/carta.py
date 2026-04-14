@@ -3,24 +3,47 @@ import pytz
 from datetime import datetime
 from ..keywords import KEYWORDS
 from ..items import CrawlerItem 
-from ..utils import validate_article, search_gangs, save_processed_kword
+from ..utils import (
+    search_gangs, 
+    validate_article, 
+    get_processed_kwords,
+    save_processed_kword
+)
+from base_spider import BaseSpider
 
-class CartaSpider(scrapy.Spider):
+class CartaSpider(BaseSpider):
     """
-    Característica: não existem notícias dos anos 2009, 2010 e 2011.
+    Spider para extração de notícias do portal CartaCapital.
+    
+    Este spider é otimizado para lidar com a estrutura de busca e paginação do WordPress,
+    além de extrair metadados técnicos (datas e tags) diretamente das meta tags de SEO 
+    da página, garantindo maior precisão cronológica.
+    
+    Notes:
+        Conforme observado no desenvolvimento, o portal não possui registros indexados 
+        para os anos de 2009, 2010 e 2011.
     """
     name = 'carta'
     allowed_domains = ['cartacapital.com.br']
     
-    # Configurações extraídas da antiga PortalInterface
+    # Template para busca via query string. O WordPress utiliza o parâmetro ?s=
     BASE_SEARCH_URL = 'https://www.cartacapital.com.br/page/{page}/?s={keyword}'
     FIRST_PAGE = 1
 
     def start_requests(self):
-        search_terms = KEYWORDS ['GANGS'] + KEYWORDS['ORGANIZED CRIME']
+        # Carrega todas as palavras-chave possíveis
+        all_terms = KEYWORDS['GANGS'] + KEYWORDS['ORGANIZED CRIME']
         
+        # Carrega as palavras que já foram totalmente processadas para este spider
+        processed_terms = get_processed_kwords(self.name)
+        
+        # Filtra: só processa o que NÃO está na lista de processadas
+        search_terms = [term for term in all_terms if term not in processed_terms]
+        
+        self.logger.info(f'[STATUS] Total: {len(all_terms)} | Já processadas: {len(processed_terms)} | Restantes: {len(search_terms)}')
+
         for keyword in search_terms:
-            self.logger.info(f'[PROCESSO] Processando palavra-chave: {keyword}')
+            self.logger.info(f'[PROCESSO] Iniciando palavra-chave: {keyword}')
             url = self.format_url(keyword, self.FIRST_PAGE)
             yield scrapy.Request(
                 url, 
@@ -29,7 +52,16 @@ class CartaSpider(scrapy.Spider):
             )
 
     def format_url(self, keyword, page):
-        """Substitui o antigo build_search_url"""
+        """
+        Gera a URL de busca formatada para uma palavra-chave e página específica.
+
+        Args:
+            keyword (str): O termo de busca a ser pesquisado.
+            page (int): O número da página de resultados.
+
+        Returns:
+            str: URL completa com o termo de busca escapado para web.
+        """
         return self.BASE_SEARCH_URL.format(
             keyword=keyword.replace(' ', '+'), 
             page=page
@@ -39,16 +71,15 @@ class CartaSpider(scrapy.Spider):
         keyword = response.meta['keyword']
         current_page = response.meta['page']
 
-        # 1. Extrai links das notícias na listagem
         news_urls = response.css('a.l-list__item::attr(href)').getall()
         for url in news_urls:
             yield scrapy.Request(
                 url, 
                 meta={'keyword': keyword}, 
-                callback=self.parse_news
+                callback=self.parse_item
             )
 
-        # 2. Paginação: verifica se existe o botão "Próxima"
+        # Paginação
         has_next = response.xpath('//span[text()="Próxima"]').get()
         if has_next:
             next_page = current_page + 1
@@ -58,28 +89,23 @@ class CartaSpider(scrapy.Spider):
                 callback=self.parse
             )
         else:
-            print(f'[AVISO] Palavra-chave {keyword} finalizada. Salvando.')
+            # Ao chegar na última página, marca a keyword como concluída
+            self.logger.info(f'[SUCESSO] Palavra-chave "{keyword}" finalizada.')
             save_processed_kword(keyword, self.name)
 
-    def parse_news(self, response):
-        # Extração de dados (lógica do antigo parse_news da CartaCapital)
+    def parse_item(self, response):
         item = CrawlerItem() 
         title = response.css('h1::text').get()
         
-        # O seletor 'section.contentsingle' captura o corpo do texto
-        article_body = response.css('.content-closed.contentOpen p::text, .content-closed.contentOpen a::text, p > strong::text,  span.s1::text').getall()
+        article_body = response.css('.content-closed.contentOpen p::text, .content-closed.contentOpen a::text, p > strong::text, span.s1::text').getall()
 
-        # Validação de Paywall simples (se não tem subtítulo, geralmente está bloqueado)
         if not article_body:
             return
 
         full_text = ' '.join(article_body).strip()
-
-        # Aqui entraa lógica de validação externa
         accepted = validate_article(full_text)
 
         if accepted:
-            
             tz_sp = pytz.timezone('America/Sao_Paulo')
             now = datetime.now(tz_sp)
             
@@ -109,10 +135,22 @@ class CartaSpider(scrapy.Spider):
         yield item
 
     def format_date(self, iso_date):
-        """Auxiliar para formatar datas ISO vindas das meta tags"""
+        """
+        Converte strings de data no formato ISO 8601 para o padrão brasileiro dd-mm-aaaa.
+
+        Args:
+            iso_date (str | None): String de data original (ex: '2023-10-27T14:30:00-03:00').
+
+        Returns:
+            str | None: Data formatada ou None em caso de entrada inválida ou erro de conversão.
+            
+        Notes:
+            Utiliza o método 'fromisoformat' nativo do datetime, sendo resiliente a 
+            falhas de tipagem ou valores nulos vindos das meta tags.
+        """
         if not iso_date:
             return None
         try:
             return datetime.fromisoformat(iso_date).strftime('%d-%m-%Y')
-        except ValueError:
+        except (ValueError, TypeError):
             return None

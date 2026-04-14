@@ -1,22 +1,25 @@
-import os
-import yaml
 import scrapy
 import pytz
 from datetime import datetime
-
+from base_spider import BaseSpider
 from ..items import CrawlerItem
-from ..utils import search_gangs, search_tags, validate_article
+from ..utils import (
+    search_gangs, 
+    search_tags, 
+    validate_article, 
+    get_processed_kwords, 
+    save_processed_kword
+)
 from ..keywords import KEYWORDS
 
-class DiplomatiqueSpider(scrapy.Spider):
+class DiplomatiqueSpider(BaseSpider):
     """
-    Spider do portal Le Monde Brasil Diplomatique
-
-    Extração: iteração sobre as palavras-chave definidas em KEYWORDS.
-
-    Controle: Ignora palavras-chave já listadas no YAML de checkpoint.
+    Spider especializado para o portal Le Monde Diplomatique Brasil.
+    
+    Diferente dos spiders anteriores, este utiliza um sistema de contagem de 
+    requisições pendentes (outstanding_requests) para gerenciar a transição 
+    assíncrona entre diferentes palavras-chave sem sobrepor os processos.
     """
-
     name = 'diplomatique'
     allowed_domains = ['diplomatique.org.br']
     
@@ -25,6 +28,7 @@ class DiplomatiqueSpider(scrapy.Spider):
         'HTTPERROR_ALLOW_ALL': True,
     }
 
+    # Seletores XPath e configurações de URL
     SEARCH_PAGE_URL = 'https://diplomatique.org.br/page/1/?s={keyword}&orderby=date&order=DESC'
     search_results_selector = '//h3/a/@href | //h2/a/@href'
     next_page_selector = '//a[@class="number nextp"]/@href'
@@ -35,6 +39,17 @@ class DiplomatiqueSpider(scrapy.Spider):
     payed_articles_selector = '//div[@class="paywall-placeholder"]'
 
     def __init__(self, keyword=None, *args, **kwargs):
+        """
+        Inicializa o spider configurando o controle de fluxo de palavras-chave.
+
+        Args:
+            keyword (str, optional): Palavra-chave específica passada via CLI (-a keyword=...).
+            *args: Argumentos posicionais da superclasse.
+            **kwargs: Argumentos nomeados da superclasse.
+
+        Notes:
+            Inicializa 'outstanding_requests' em 0 para rastrear o processamento assíncrono.
+        """
         super(DiplomatiqueSpider, self).__init__(*args, **kwargs)
         self.user_keyword = keyword
         self.outstanding_requests = 0
@@ -44,46 +59,35 @@ class DiplomatiqueSpider(scrapy.Spider):
         
         self._initialize_keywords()
 
-    @property
-    def checkpoint_path(self):
-        folder = 'kwords-processing'
-        if not os.path.exists(folder):
-            os.makedirs(folder)
-        return os.path.join(folder, f"{self.name}_processed_kwords.yaml")
-
     def _initialize_keywords(self):
-        """Prepara a lista de termos ignorando os já processados no YAML."""
+        """
+        Prepara e filtra a lista de termos de busca.
+
+        Notes:
+            Consolida as listas 'GANGS' e 'ORGANIZED CRIME' e remove termos 
+            que já constam no log de processados do utilitário 'get_processed_kwords'.
+        """
         if self.user_keyword:
             full_list = [self.user_keyword]
         else:
-            # Consolida as listas do arquivo de keywords
             full_list = KEYWORDS.get('GANGS', []) + KEYWORDS.get('ORGANIZED CRIME', [])
 
-        done = set()
-        if os.path.exists(self.checkpoint_path):
-            with open(self.checkpoint_path, 'r', encoding='utf-8') as f:
-                data = yaml.safe_load(f)
-                done = set(data) if isinstance(data, list) else set()
-
-        # Filtra apenas o que não foi feito
+        done = get_processed_kwords(self.name)
         self.search_keywords = [k for k in full_list if k not in done]
-
-    def _mark_as_done(self, keyword):
-        """Persiste a keyword finalizada no YAML."""
-        done = []
-        if os.path.exists(self.checkpoint_path):
-            with open(self.checkpoint_path, 'r', encoding='utf-8') as f:
-                done = yaml.safe_load(f) or []
-        
-        if keyword not in done:
-            done.append(keyword)
-            with open(self.checkpoint_path, 'w', encoding='utf-8') as f:
-                yaml.dump(done, f, allow_unicode=True)
 
     def start_requests(self):
         yield from self.process_next_keyword()
 
     def process_next_keyword(self):
+        """
+        Orquestra a transição para a próxima palavra-chave da lista.
+
+        Yields:
+            scrapy.Request: A requisição inicial para a página de busca do novo termo.
+
+        Notes:
+            Incrementa o 'keyword_index' e limpa o contador de requisições pendentes.
+        """
         if self.keyword_index < len(self.search_keywords):
             self.current_keyword = self.search_keywords[self.keyword_index]
             print(f'[PROCESSO] Processando palavra-chave: {self.current_keyword}')
@@ -92,11 +96,11 @@ class DiplomatiqueSpider(scrapy.Spider):
             search_url = self.SEARCH_PAGE_URL.format(keyword=self.current_keyword.replace(' ', '+'))
             
             self.outstanding_requests = 1
-            yield scrapy.Request(url=search_url, callback=self.parse_search_results)
+            yield scrapy.Request(url=search_url, callback=self.parse)
         else:
             print("[SUCESSO] Todas as palavras-chave foram processadas.")
 
-    def parse_search_results(self, response):
+    def parse(self, response):
         links = response.xpath(self.search_results_selector).getall()
         for link in links:
             self.outstanding_requests += 1
@@ -109,13 +113,14 @@ class DiplomatiqueSpider(scrapy.Spider):
         next_page = response.xpath(self.next_page_selector).get()
         if next_page:
             self.outstanding_requests += 1
-            yield scrapy.Request(url=response.urljoin(next_page), callback=self.parse_search_results)
+            yield scrapy.Request(url=response.urljoin(next_page), callback=self.parse)
 
         self.outstanding_requests -= 1
         if self.outstanding_requests <= 0:
             yield from self.check_and_advance()
 
     def parse_item(self, response):
+        # Ignora se for conteúdo exclusivo (paywall)
         if not response.xpath(self.payed_articles_selector).get():
             item = CrawlerItem()
             content_parts = response.xpath(self.article_content_selector).getall()
@@ -132,7 +137,6 @@ class DiplomatiqueSpider(scrapy.Spider):
                 item['gangs'] = search_gangs(article_body)
                 item['tags'] = search_tags(article_body)
                 item['manual_relevance_class'] = None
-                
             else:
                 item['url'] = response.url
 
@@ -147,14 +151,34 @@ class DiplomatiqueSpider(scrapy.Spider):
             yield from self.check_and_advance()
 
     def handle_failure(self, failure):
+        """
+        Trata falhas de conexão ou erros de requisição nas notícias individuais.
+
+        Args:
+            failure (twisted.python.failure.Failure): Objeto contendo os detalhes do erro.
+
+        Notes:
+            Decrementa o contador de requisições e verifica se é necessário avançar 
+            para o próximo termo caso esta tenha sido a última pendência.
+        """
         self.outstanding_requests -= 1
         if self.outstanding_requests <= 0:
             yield from self.check_and_advance()
 
     def check_and_advance(self):
+        """
+        Finaliza o ciclo de vida de uma palavra-chave.
+
+        Yields:
+            Generator: Chama 'process_next_keyword' para buscar o próximo termo.
+
+        Notes:
+            Salva a palavra-chave atual no log de concluídos via 'save_processed_kword' 
+            antes de reiniciar os contadores.
+        """
         if self.current_keyword:
-            self._mark_as_done(self.current_keyword)
-            print(f"[SUCESSO] Termo '{self.current_keyword}' concluído e salvo no YAML.")
+            save_processed_kword(self.name, self.current_keyword)
+            print(f"[SUCESSO] Termo '{self.current_keyword}' concluído e salvo.")
 
         self.outstanding_requests = 0 
         yield from self.process_next_keyword()

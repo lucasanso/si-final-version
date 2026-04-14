@@ -21,14 +21,32 @@ except FileNotFoundError as e:
 
 class ConnectionsDiario:
     """
-    Classe que contém a conexão SSH e do MongoDB.
+    Gerencia o ciclo de vida das conexões de rede do projeto.
+    
+    Responsável por estabelecer o túnel SSH (Port Forwarding) e a conexão 
+    com o cluster MongoDB, garantindo que o tráfego de dados seja criptografado 
+    e seguro entre a máquina local e o servidor LAMCAD.
     """
     def __init__(self):
+        """
+        Inicializa a instância da classe de conexão.
+        """
         pass
     
     def connect_ssh(self):
         """
-        Realiza conexão SSH.
+        Estabelece um túnel SSH seguro para redirecionamento de porta.
+
+        Utiliza as configurações lidas do YAML para mapear uma porta local 
+        para o serviço do MongoDB no servidor remoto.
+
+        Returns:
+            sshtunnel.SSHTunnelForwarder: O objeto do servidor de túnel. 
+                                          Requer chamada ao método .start() para ativar.
+        
+        Notes:
+            O túnel é essencial quando o banco de dados MongoDB não está exposto 
+            diretamente à internet por razões de segurança.
         """
         SERVER = (ssh_configs["server_ip"], ssh_configs["server_port"])
         LOCAL = (ssh_configs["local_bind_ip"], ssh_configs["local_bind_port"])
@@ -43,24 +61,33 @@ class ConnectionsDiario:
         )
 
         print("[SUCESSO] Conexão SSH estabelecida")
-
-        # Retornando completo, tem que inicializar (server.start())
         return self.server
 
     def connect_mongodb(self):
         """
-        Realiza conexão com o MongoDB.
+        Inicia o cliente de conexão com o banco de dados MongoDB.
+
+        Returns:
+            pymongo.MongoClient: Instância do cliente MongoDB pronta para 
+                                 acessar bancos e coleções.
+        
+        Notes:
+            A conexão deve ser realizada APÓS o início do túnel SSH para que 
+            a URI aponte corretamente para a porta local mapeada.
         """
         connection_string = mongo_db_configs["uri"]
-
         self.client = MongoClient(connection_string)
 
         print("[SUCESSO] Conexão com o MongoDB estabelecida")
-        
-        # Retornando completo, tem que inicializar. (get_database e get_collection)
         return self.client
     
     def close_connection(self):
+        """
+        Realiza o fechamento gracioso (graceful shutdown) de todas as conexões.
+
+        Encerra primeiro o cliente do banco de dados e, em seguida, interrompe 
+        o túnel SSH para liberar as portas do sistema operacional.
+        """
         if self.client:
             self.client.close()
 

@@ -5,7 +5,7 @@ class Menu:
     def __init__(self):
         pass
 
-    def msg(self):
+    def menu_processing(self):
         print(
             "\nQual operação deseja realizar?\n\n"
             "1. Retirar espaço em branco de determinado campo do JSON.\n"
@@ -15,8 +15,8 @@ class Menu:
             "5. Inserir índice 'id_event' em documentos.\n"
             "6. Atualizar nome de um portal.\n"
             "7. Mover urls de um portal para outro.\n"
-            "8. Próximo menu.\n"
-            "9. Settando\n"
+            "8. Settando\n"
+            "9. Próximo menu.\n"
             "0. Encerrar o programa."
         )
 
@@ -24,10 +24,8 @@ class Menu:
         print(
             "\nQual operação deseja realizar?\n\n"
             "1. Obter relatório de notícias/ano.\n"
-            "2. Gerar backup da coleção newsData.\n"
-            "3. Gerar backup da coleção unacceptedData.\n"
-            "4. Converter arquivo .csv\n"
-            "5. Menu anterior.\n"
+            "2. Converter arquivo .csv\n"
+            "3. Menu anterior.\n"
             "0. Encerrar o programa."
         )
 

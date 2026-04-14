@@ -3,23 +3,27 @@ import re
 import pytz
 import calendar
 from datetime import datetime
-from scrapy_playwright.page import PageMethod
-
 from ..keywords import KEYWORDS
 from ..settings import YEARS
 from ..items import CrawlerItem
 from ..utils import (
-    get_processed_kwords, 
-    save_processed_kword, 
-    validate_article, 
     search_gangs, 
-    search_tags
+    search_tags, 
+    validate_article, 
+    get_processed_kwords, 
+    save_processed_kword
 )
 
 class EstadaoSpider(scrapy.Spider):
+    """
+    Spider especializado para o portal Estadão. 
+    Diferencia-se por lidar com resultados de busca gerados dinamicamente via JavaScript,
+    utilizando Playwright para navegar pela paginação interna das buscas.
+    """
     name = "estadao"
     allowed_domains = ['www.estadao.com.br']
 
+    # Configurações específicas para suportar execução assíncrona do Playwright
     custom_settings = {
         'DOWNLOAD_HANDLERS': {
             'http': 'scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler',
@@ -27,12 +31,23 @@ class EstadaoSpider(scrapy.Spider):
         },
         'TWISTED_REACTOR': 'twisted.internet.asyncioreactor.AsyncioSelectorReactor',
         'PLAYWRIGHT_LAUNCH_OPTIONS': {'headless': True, 'timeout': 30000},
-        'CONCURRENT_REQUESTS': 3, # Um dia por vez para não dar nó na memória
+        'CONCURRENT_REQUESTS': 3, # Valor baixo para evitar bloqueios por rate limiting
     }
 
+    # URL base contendo o token de busca (JSON encodado) para filtros de data
     SEARCH_URL = "https://www.estadao.com.br/busca/?token=%257B%2522query%2522%253A%2522{}%2522%252C%2522date_range%2522%253A%2522{:02d}%252F{:02d}%252F{}%252C{:02d}%252F{:02d}%252F{}%2522%257D"
 
     def __init__(self, **kwargs):
+        """
+        Inicializa o spider do Estadão carregando o histórico de processamento.
+
+        Args:
+            **kwargs: Argumentos passados via comando Scrapy (ex: -a y=2024).
+
+        Notes:
+            A lista 'self.processed' é usada para pular palavras-chave que já
+            foram completamente extraídas em execuções passadas.
+        """
         super().__init__(**kwargs)
         self.processed = get_processed_kwords(self.name)
 
@@ -81,14 +96,14 @@ class EstadaoSpider(scrapy.Spider):
         try:
             current_p = 1
             while True:
-                # 1. Espera os links carregarem
+                # Espera os links carregarem
                 try:
                     await page.wait_for_selector(".headline", timeout=10000)
                 except:
                     self.logger.info(f"Sem resultados para {keyword} em {date_str}")
                     break
 
-                # 2. Extrai links da página atual
+                # Extrai links da página atual
                 content = await page.content()
                 sel = scrapy.Selector(text=content)
                 links = sel.css('.headline::attr(href)').getall()
@@ -98,7 +113,7 @@ class EstadaoSpider(scrapy.Spider):
                 for link in links:
                     yield response.follow(link, callback=self.parse_item, meta={'keyword': keyword})
 
-                # 3. Verificação de paginação (Lógica do .cancel)
+                # Verificação de paginação (Lógica do .cancel)
                 # Se o botão de 'Próximo' NÃO tiver a classe 'cancel', a gente clica.
                 next_btn = await page.query_selector('.arrow.right:not(.cancel)')
                 
