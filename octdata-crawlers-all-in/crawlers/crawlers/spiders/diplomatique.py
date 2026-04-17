@@ -1,7 +1,7 @@
 import scrapy
 import pytz
 from datetime import datetime
-from base_spider import BaseSpider
+from .base_spider import BaseSpider
 from ..items import CrawlerItem
 from ..utils import (
     search_gangs, 

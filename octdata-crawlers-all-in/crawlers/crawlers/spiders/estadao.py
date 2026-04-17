@@ -13,8 +13,9 @@ from ..utils import (
     get_processed_kwords, 
     save_processed_kword
 )
+from .base_spider import BaseSpider
 
-class EstadaoSpider(scrapy.Spider):
+class EstadaoSpider(BaseSpider):
     """
     Spider especializado para o portal Estadão. 
     Diferencia-se por lidar com resultados de busca gerados dinamicamente via JavaScript,

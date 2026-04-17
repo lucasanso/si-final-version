@@ -166,7 +166,7 @@ class SpiderDiario:
                         item["url"] = url
                         item["article"] = corpo
                         item["acquisition_date"] = str(date.today())
-                        item["newspaper"] = "Diario do Amanha"
+                        item["newspaper"] = "Diário da Manhã"
                         item["publication_date"] = self.extract_publication_date(html)
                         item["last_update"] = item["publication_date"]
                         item['id_event'] = self.get_next_id_event()

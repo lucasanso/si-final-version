@@ -4,7 +4,7 @@ import pytz
 import calendar
 from datetime import datetime
 from scrapy import signals
-from base_spider import BaseSpider
+from .base_spider import BaseSpider
 from ..items import CrawlerItem
 from ..utils import (
     search_gangs, 

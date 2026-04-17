@@ -9,7 +9,7 @@ from ..utils import (
     get_processed_kwords,
     save_processed_kword
 )
-from base_spider import BaseSpider
+from .base_spider import BaseSpider
 
 class CartaSpider(BaseSpider):
     """

@@ -12,7 +12,7 @@ from ..utils import (
 )
 from ..items import CrawlerItem
 from ..keywords import KEYWORDS
-from base_spider import BaseSpider
+from .base_spider import BaseSpider
 
 # Configurações de URL e Arquivos
 ORDER = 'recent'
