@@ -1,6 +1,6 @@
 # Estudar colocar tudo isso aqui no config.yaml
 
-NOMES_PORTAIS = ["Carta Capital", "Correio do Povo", "Le Monde Brasil Diplomatique", "G1", "Diário da Manhã", "Folha de São Paulo", "Estadão"]
+NOMES_PORTAIS = ["Carta Capital", "Correio do Povo", "Le Monde Brasil Diplomatique", "G1", "Diário da Manhã", "Folha de São Paulo", "Estadão", "FolhaSP", "CartaCapital", "Diario da Manha", "Diario do Amanha"]
 
 ANOS_A_PERCORRER = [y for y in range (2009, 2027)]
 
@@ -11,4 +11,4 @@ UNACCEPTED_NEWS_COLLECTION = "unacceptedNews"
 
 DATA_FIELDS = ["acquisition_date", "publication_date", "last_update"]
 
-COLLECTIONS = ["newsData", "unacceptedNews"]
+COLLECTIONS = ["newsData", "unacceptedNews", "newsDataTeste"]

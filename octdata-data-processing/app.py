@@ -29,6 +29,7 @@ class App:
             '6': self.worker.update_newspaper_name,
             '7': self.worker.merge_unaccepted_collections,
             '8' : self.worker.setAttribute,
+            '10': self.worker.update_id_event_otimizado,
             '9' : True
         }
 
@@ -44,7 +45,7 @@ class App:
                     
     def menu(self):
         while(True):
-            self.the_menu.menu_processing()
+            self.the_menu.msg()
             option = input()
 
             if option == "0":

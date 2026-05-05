@@ -329,7 +329,7 @@ class SpiderDiario:
         list_words = []
         if os.path.exists ("checked_words.yaml") == False:
             print("[SUCESSO] Arquivo .yaml contendo as palavras-chave já percorridas foi criado")
-            Path.touch("checked_words.yaml")
+            Path.touch("diario_da_manha.yaml")
 
             return list_words
         

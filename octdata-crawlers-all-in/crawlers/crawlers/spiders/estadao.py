@@ -32,7 +32,7 @@ class EstadaoSpider(BaseSpider):
         },
         'TWISTED_REACTOR': 'twisted.internet.asyncioreactor.AsyncioSelectorReactor',
         'PLAYWRIGHT_LAUNCH_OPTIONS': {'headless': True, 'timeout': 30000},
-        'CONCURRENT_REQUESTS': 3, # Valor baixo para evitar bloqueios por rate limiting
+        'CONCURRENT_REQUESTS': 6, # Valor baixo para evitar bloqueios por rate limiting
     }
 
     # URL base contendo o token de busca (JSON encodado) para filtros de data

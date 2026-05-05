@@ -21,9 +21,9 @@ O projeto alcançou números expressivos, demonstrando a eficiência da lógica 
 
     8 portais de notícias monitorados simultaneamente (G1, Folha de São Paulo, Brasil de Fato, Correio do Povo, Carta Capital, Le Monde Brasil Diplomatique, Diário da Manhã e Estadão).
 
-    2,5 milhões de URLs percorridas pelos crawlers.
+    3,5 milhões de URLs percorridas pelos crawlers.
 
-    100 mil notícias validadas e integradas ao dataset final após critérios rigorosos de filtragem sobre crime organizado.
+    120 mil notícias validadas e integradas ao dataset final após critérios rigorosos de filtragem sobre crime organizado.
 
 Para garantir a saúde da operação, foi desenvolvido um painel de observabilidade, permitindo o acompanhamento em tempo real da extração e apoiando a tomada de decisão técnica durante o processo de coleta.
 

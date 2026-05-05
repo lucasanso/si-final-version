@@ -1,0 +1,24 @@
+services:
+  data_processing:
+    build:
+      context: ./octdata-data-processing
+      dockerfile: Dockerfile
+    container_name: data_processing
+    tty: true
+    stdin_open: true
+
+  portals_extractors:
+    build: 
+      context: ./octdata-crawlers-all-in/crawlers
+      dockerfile: Dockerfile
+    container_name: portals-extractors
+    tty: true
+    stdin_open: true
+
+  diario-extractor: 
+    build:
+      context: ./octdata-crawlers-all-in/diario-da-manha/diario-da-manha
+      dockerfile: Dockerfile
+    container_name: diario-extractor  
+    tty: true
+    stdin_open: true

@@ -83,7 +83,7 @@ class G1Spider(BaseSpider):
         if kwargs.get('k'): 
             self.keywords = [kwargs.get('k')]
         
-        self.target_year = int(kwargs.get('y')) if kwargs.get('y') else 2023
+        self.target_year = int(kwargs.get('y')) if kwargs.get('y') else 2018
 
     def start_requests(self):
         scroll_script = """
@@ -151,7 +151,7 @@ class G1Spider(BaseSpider):
 
                 yield scrapy.Request(
                     url, 
-                    self.parse_news, 
+                    self.parse_item, 
                     meta={'keyword': keyword},
                     dont_filter=False # Deixe o Scrapy filtrar URLs repetidas
                 )
@@ -159,7 +159,7 @@ class G1Spider(BaseSpider):
         finally:
             await page.close()
 
-    def parse_news(self, response):
+    def parse_item(self, response):
         # Validação básica de título
         title = response.css("h1.content-head__title::text").get() or response.css("h1.entry-title::text").get()
         if not title: 

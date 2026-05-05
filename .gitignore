@@ -2,4 +2,7 @@ venv/
 config.yaml
 __pycache__
 kwords-processing/
-dags/
+logs/
+data/
+*.csv
+.env

@@ -17,6 +17,7 @@ class Menu:
             "7. Mover urls de um portal para outro.\n"
             "8. Próximo menu.\n"
             "9. Settando\n"
+            "10. Atualizar id_event\n"
             "0. Encerrar o programa."
         )
 

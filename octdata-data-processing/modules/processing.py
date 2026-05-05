@@ -5,6 +5,9 @@ from modules.connection import ConnectMongoSSH
 from modules.load import LoadData
 import logging
 from modules.settings import NOMES_PORTAIS, ANOS_A_PERCORRER, DATA_FIELDS
+import pandas as pd
+from pymongo import UpdateOne, errors
+from bson.objectid import ObjectId
 
 # Implementar camada de segurança maior aqui pois as funções que atingem diretamente o banco de dados e atributos.
 
@@ -118,7 +121,7 @@ class TransformData:
             for doc in cursor.find(query):
                 if doc[field] is None:
                     print("Data nula!")
-                    time.sleep(0.15)
+                    continue
 
                 elif re.findall(r'20..-..-..', doc[field]):
                     print("[AVISO] A data já está formatada em ISO")
@@ -173,9 +176,8 @@ class TransformData:
             for doc in cursor.find(query):
                 if doc[field] is None:
                     print("[CRÍTICO] Data nula")
-                    time.sleep(0.15)
-
                     continue
+
                 elif re.findall(r'[0-3][1-9]-..-....', doc[field]):
                     print("[AVISO] A data está formatada em ISO invertido")
                     continue
@@ -285,7 +287,6 @@ class TransformData:
             for doc in cursor.find(query):
                 if doc[field] is None:
                     print("[AVISO] Data nula!")
-                    time.sleep(1)
                     continue
                 
                 elif re.findall(r' de ', doc[field]):
@@ -472,6 +473,36 @@ class TransformData:
 
                 print("[SUCESSO] Campo manual_relevance_class adicionado.")
 
+    from pymongo import UpdateOne # Importe isso no topo do seu arquivo
 
+    def update_id_event_otimizado(self):
+        """
+        Atualiza 'id_event' de 1 até N usando lotes (Bulk Write) para não travar o servidor.
+        """
+        connection = ConnectMongoSSH()
+        collection = connection._connect_to_mongo()
+        
+        cursor = collection.find().sort('_id', 1)
+        
+        batch_updates = []
+        contador = 1
+        
+        print("Iniciando a reordenação em lotes...")
+        
+        for doc in cursor:
+            batch_updates.append(
+                UpdateOne({'_id': doc['_id']}, {'$set': {'id_event': contador}})
+            )
+            contador += 1
+            
+            # Envia para o MongoDB a cada 1000 documentos
+            if len(batch_updates) == 1000:
+                collection.bulk_write(batch_updates)
+                batch_updates = [] # Limpa a lista para o próximo lote
+                print(f"[PROGRESSO] {contador - 1} registros atualizados...")
 
-    
+        # Garante que os documentos restantes (que não deram múltiplo de 1000) sejam enviados
+        if batch_updates:
+            collection.bulk_write(batch_updates)
+            
+        print(f"[SUCESSO TOTAL] {contador - 1} documentos foram atualizados de 1 até {contador - 1}.")
